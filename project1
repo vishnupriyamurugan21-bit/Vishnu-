@@ -1,0 +1,231 @@
+import time
+import pygame as p
+import random as r
+import pywhatkit as pk
+import pyautogui as pg
+
+p.init()
+loan_amount = 0
+name1 = ""
+mobile1 = ""
+emi_value = 0
+bank_name = ""
+bike_name = ""
+
+# ---------------- LOGIN ----------------
+def login():
+    global name, password
+    name = input("Enter Username: ")
+    password = input("Enter Password: ")
+
+    for i in range(3):
+        user = input("USER: ")
+        p1 = input("PASSWORD: ")
+        if user == name and p1 == password:
+            print("Login Successful")
+            return True
+        else:
+            print("Invalid")
+    return False
+
+# ---------------- DISPlAY IMAGE---------------#
+p.init()
+p.screen = p.display.set_mode((600, 600))
+p.display.set_caption("Bike Loan System")
+image = p.image.load(r"C:\Users\vishn\OneDrive\Pictures\bike .png")
+p.screen.blit(image, (10, 50))
+p.display.update()
+time.sleep(3)
+p.quit()
+
+# ---------------- EMI ----------------#
+def emi_calc(p1, rate, months):
+    r1 = rate / (12 * 100)
+    emi = (p1 * r1 * (1 + r1)**months) / ((1 + r1)**months - 1)
+    return round(emi, 2)
+
+# ---------------- PAYMENT ----------------#
+def payment():
+    global loan_amount
+
+    print("\n1. GPay\n2. Cash")
+    ch = int(input("Select payment: "))
+
+    if ch == 1:
+        amt = float(input("Enter amount: "))
+        if amt == loan_amount:
+            print("Payment Successful")
+        else:
+            print("Wrong amount")
+            return payment()
+
+    elif ch == 2:
+        print("Processing Cash...")
+        time.sleep(2)
+        print("Payment Successful")
+    send_bill()
+
+# ---------------- SEND WHATSAPP BILL ----------------#
+def send_bill():
+    msg = f"""
+    ----- BIKE LOAN BILL -----
+    Name: {name1}
+    Mobile: {mobile1}
+    Bike: {bike_name}
+    Bank: {bank_name}
+    Loan: {loan_amount}
+    EMI: {emi_value}
+    --------------------------
+    """
+    print(msg)
+    pk.sendwhatmsg_instantly(f"+91{mobile1}", msg)
+    time.sleep(5)
+    pg.press("enter")
+
+# ---------------- ADDRESS ----------------#
+def address():
+    global name1, mobile1
+
+    ch = input("Apply Loan? (yes/no): ").lower()
+    if ch != "yes":
+        return
+
+    name1 = input("Enter Name: ")
+    mobile1 = input("Enter Mobile: ")
+
+    payment()
+
+# ---------------- BANK ----------------#
+def bank():
+    global emi_value, bank_name
+
+    print("\n1. SBI (9%)\n2. HDFC (10%)\n3. ICICI (11%)\n4. Axis (8%)")
+    ch = int(input("Select Bank: "))
+
+    if ch == 1:
+        rate = 9
+        bank_name = "SBI"
+    elif ch == 2:
+        rate = 10
+        bank_name = "HDFC"
+    elif ch == 3:
+        rate = 11
+        bank_name = "ICICI"
+    elif ch == 4:
+        rate = 8
+        bank_name = "Axis"
+    else:
+        print("Invalid")
+        return bank()
+
+    months = int(input("Enter months: "))
+    emi_value = emi_calc(loan_amount, rate, months)
+
+    print("EMI:", emi_value)
+
+    address()
+
+def show_image():
+    p.init()
+    p.screen = p.display.set_mode((800, 800))
+    p.display.set_caption("Bike Loan System")
+    image = p.image.load(r"C:\Users\vishn\OneDrive\Pictures\bike .png")
+    p.screen.blit(image, (10, 50))
+    p.display.update()
+    time.sleep(3)
+    p.quit()
+
+#------------------- Bikes Name -----------------------------#
+def bikes():
+    global loan_amount, bike_name
+    print("\n1. FZF1\n2. R15\n3. Apache\n4. duke")
+    ch = int(input("enter bike name:"))
+
+    if ch==1:
+       print("FZF1")
+       bike_name = "FZF1"
+       b=r.randint(15000,20000)
+       p.init()
+       p.display.set_caption("bike loan system")
+       ps1=p.display.set_mode((600,600))
+       ps=p.image.load(r"C:\Users\vishn\OneDrive\Pictures\FZ-FI.jpg")
+       ps1.blit(ps,(10,10))
+       p.display.update()
+       time.sleep(5)
+       p.quit()
+
+    elif ch==2:
+        print("R15")
+        bike_name = "R15"
+        b=r.randint(15000,20000)
+        p.init()
+        p.display.set_caption("bike loan system")
+        ps2=p.display.set_mode((600,600))
+        ps=p.image.load(r"C:\Users\vishn\OneDrive\Pictures\R15 .png")
+        ps2.blit(ps,(10,10))
+        p.display.update()
+        time.sleep(5)
+        p.quit()
+
+    elif ch==3:
+        print("Apache")
+        bike_name = "Apache"
+        b=r.randint(15000,20000)
+        p.init()
+        p.display.set_caption("bike loan system")
+        ps3=p.display.set_mode((600,600))
+        ps=p.image.load(r"C:\Users\vishn\OneDrive\Pictures\Apache bike.png")
+        ps3.blit(ps,(10,10))
+        p.display.update()
+        time.sleep(5)
+        p.quit()
+
+    elif ch==4:
+        print("duke")
+        bike_name = "duke"
+        b=r.randint(15000,20000)
+        p.init()
+        p.display.set_caption("bike loan system")
+        ps4=p.display.set_mode((800,800))
+        ps=p.image.load(r"C:\Users\vishn\OneDrive\Pictures\duke.png")
+        ps4.blit(ps,(10,10))
+        p.display.update()
+        time.sleep(5)
+        p.quit()
+
+    else:
+        print("invalid choice")
+        return bikes()
+
+    print("price:",b)
+
+    d = float(input("enter down payment:"))
+    loan_amount = b-d
+
+    print("loan amount:",loan_amount)
+    bank()
+
+# ---------------- MAIN ----------------
+def main():
+    if not login():
+        print("Login Failed")
+        return
+
+    while True:
+        print("\n1. Apply Bike Loan\n2. Exit")
+
+        try:
+            ch = int(input("Enter choice: "))
+        except ValueError:
+            print("Invalid input! Enter numbers only.")
+            continue
+
+        if ch == 1:
+            bikes()
+        elif ch == 2:
+            print("Thank You")
+            break
+        else:
+            print("Invalid choice")
+
+main()
